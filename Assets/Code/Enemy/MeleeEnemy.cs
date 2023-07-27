@@ -11,8 +11,8 @@ namespace Code.Enemy
         private readonly EnemySettings _enemySettings;
         private readonly NavMeshAgent _agent;
         private readonly GameObject _targetMove;
-
-        private Collider _collider;
+        private readonly Collider _collider;
+        
         private int _currentHp;
 
         public MeleeEnemy(EnemySettings enemySettings, GameObject targetMove)
@@ -33,20 +33,18 @@ namespace Code.Enemy
             _agent.SetDestination(_targetMove.transform.position);
         }
 
-        public void Reload()
+        public void Attack()
         {
             throw new NotImplementedException();
         }
 
-        public void CollisionHandling()
+        public void Reload()
         {
-            
+            throw new NotImplementedException();
         }
-        
         private void GiveDamage(int damage, Collider collider)
         {
             if(_collider != collider) return;
-            $"444444444444".Colored(Color.cyan).Log();
             _currentHp -= damage;
             
             if (_currentHp <= 0)

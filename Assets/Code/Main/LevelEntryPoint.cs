@@ -3,7 +3,6 @@ using Code.Enemy;
 using Code.Hero;
 using Code.Weapon;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Code.Main
 {
@@ -21,7 +20,6 @@ namespace Code.Main
 
         private void Awake()
         {
-            
             _heroMove = new HeroMove(Joystick, HeroSettings);
             _heroShooter = new HeroShooter(HeroSettings, _heroMove, WeaponSettings);
             
@@ -44,7 +42,7 @@ namespace Code.Main
             _enemy = new IEnemy[_enemySettings.Length];
             for (int i = 0; i < _enemySettings.Length; i++)
             {
-                if (_enemySettings[i].Type == EnemyType.Warrior)
+                if (_enemySettings[i].Type == EnemyType.MeleeEnemy)
                 {
                     _enemy[i] = new MeleeEnemy(_enemySettings[i], HeroSettings.gameObject);
                 }
@@ -54,6 +52,7 @@ namespace Code.Main
         private void OnDestroy()
         {
             _heroShooter.Dispose();
+            _heroMove.Dispose();
 
             foreach (var enemy in _enemy)
             {
