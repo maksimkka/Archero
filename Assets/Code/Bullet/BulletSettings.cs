@@ -1,5 +1,6 @@
 ﻿using System;
 using Code.Enemy;
+using Code.Pool;
 using UnityEngine;
 
 namespace Code.Bullet
@@ -8,21 +9,16 @@ namespace Code.Bullet
     {
         [field: SerializeField] public int Damage { get; private set; }
 
-        public static Action<int, Collider> OnEnemyCollision;
+        private GameObjectPool<Transform> _gameObjectPool;
 
-        private void OnTriggerEnter(Collider other)
+        public void SetPool(GameObjectPool<Transform> gameObjectPool)
         {
-            if (other.gameObject.layer == Layers.Enemy)
-            {
-                gameObject.SetActive(false);
+            _gameObjectPool = gameObjectPool;
+        }
 
-                OnEnemyCollision.Invoke(Damage, other);
-            }
-
-            else if(other.gameObject.layer == Layers.Wall)
-            {
-                gameObject.SetActive(false);
-            }
+        public void ReturnToPool()
+        {
+            _gameObjectPool.ReturnObject(gameObject.transform);
         }
     }
 }

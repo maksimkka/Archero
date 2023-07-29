@@ -6,6 +6,6 @@ namespace Code.Hero
     {
         [field: SerializeField] public int HP { get; private set; }
         [field: SerializeField] public float Speed { get; private set; }
-        [field: SerializeField] public float ShootingSpeed { get; private set; }
+        [field: SerializeField] public Transform HealthBarPosition { get; private set; }
     }
 }

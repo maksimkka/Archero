@@ -6,5 +6,6 @@ namespace Code.Weapon
     {
         [field: SerializeField] public GameObject Bullet { get; private set; }
         [field: SerializeField] public float ShootForce { get; private set; }
+        [field: SerializeField] public float ShootReload { get; private set; }
     }
 }

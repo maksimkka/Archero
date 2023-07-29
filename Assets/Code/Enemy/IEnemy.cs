@@ -1,12 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Code.Enemy
 {
     public interface IEnemy
     {
-        public void Move();
-        public void Attack();
-        public void Reload();
+        public void Run();
         public void Dispose();
+        public event Action<int> HitClose;
+        public event Action<int> Died;
     }
 }

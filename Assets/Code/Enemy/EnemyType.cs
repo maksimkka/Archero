@@ -2,9 +2,7 @@
 {
     public enum EnemyType
     {
-        Warrior = 0,
-        MeleeEnemy = 1,
-        Shooter = 2,
-        Flying = 3
+        Shooter = 0,
+        Flying = 1
     }
 }
