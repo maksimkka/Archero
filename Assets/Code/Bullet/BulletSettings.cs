@@ -1,10 +1,9 @@
-﻿using System;
-using Code.Enemy;
-using Code.Pool;
+﻿using Code.Pool;
 using UnityEngine;
 
 namespace Code.Bullet
 {
+    [DisallowMultipleComponent]
     public class BulletSettings : MonoBehaviour
     {
         [field: SerializeField] public int Damage { get; private set; }

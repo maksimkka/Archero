@@ -1,8 +1,8 @@
 ﻿using System;
 using Code.Bullet;
+using Code.Collision;
+using Code.DifferentMechanics;
 using Code.Game.HealthBar;
-using Code.Hero;
-using Code.HUD;
 using Code.Weapon;
 using UnityEngine;
 using UnityEngine.AI;
@@ -14,7 +14,7 @@ namespace Code.Enemy
         public event Action<int> HitClose;
         public event Action<int> Died;
 
-        private readonly EnemySettings _enemySettings;
+        private readonly GeneralEnemySettings _generalEnemySettings;
         private readonly NavMeshAgent _agent;
         private readonly HeroSettings _targetForMovementPlayer;
         private readonly Collider _collider;
@@ -22,27 +22,30 @@ namespace Code.Enemy
         private readonly WeaponReloader _weaponReloader;
         private readonly HealthBar _healthBar;
         private readonly CounterEnemies _counterEnemies;
+        private readonly ShootingEnemySettings _shootingEnemySettings;
 
         private readonly float _timeStillnessAndMovement;
         private float _currentCountdownTimer;
         private bool _isGoing;
         private int _currentHp;
 
-        public ShooterEnemy(EnemySettings enemySettings, HeroSettings targetForMovementPlayer,
-            WeaponSettings weaponSettings, HealthBar healthBar, CounterEnemies counterEnemies)
+        public ShooterEnemy(GeneralEnemySettings generalEnemySettings, HeroSettings targetForMovementPlayer,
+            WeaponSettings weaponSettings, HealthBar healthBar, CounterEnemies counterEnemies,
+            ShootingEnemySettings shootingEnemySettings)
         {
+            _shootingEnemySettings = shootingEnemySettings;
             _counterEnemies = counterEnemies;
             _healthBar = healthBar;
-            _ignoreLayer = enemySettings.IgnoreLayerMask;
-            _collider = enemySettings.GetComponent<Collider>();
+            _ignoreLayer = _shootingEnemySettings.IgnoreLayerMask;
+            _collider = generalEnemySettings.GetComponent<Collider>();
             var shooter = new Shooter(weaponSettings);
             _weaponReloader = new WeaponReloader(shooter, weaponSettings.ShootReload);
-            _enemySettings = enemySettings;
-            _agent = enemySettings.GetComponent<NavMeshAgent>();
+            _generalEnemySettings = generalEnemySettings;
+            _agent = generalEnemySettings.GetComponent<NavMeshAgent>();
             _targetForMovementPlayer = targetForMovementPlayer;
-            _agent.speed = enemySettings.Speed;
-            _currentHp = enemySettings.HP;
-            _timeStillnessAndMovement = enemySettings.TimeStillnessAndMovement;
+            _agent.speed = generalEnemySettings.Speed;
+            _currentHp = generalEnemySettings.HP;
+            _timeStillnessAndMovement = _shootingEnemySettings.TimeStillness;
             CollisionDetector.TriggerDetected += CollisionEnterHandler;
         }
 
@@ -51,7 +54,7 @@ namespace Code.Enemy
             if (!_agent.gameObject.activeSelf) return;
             Move();
         }
-        
+
         private void CollisionEnterHandler(Collider selfCollider, Collider otherCollider)
         {
             if (otherCollider.gameObject.layer == Layers.Enemy && selfCollider.gameObject.layer == Layers.Bullet)
@@ -65,11 +68,12 @@ namespace Code.Enemy
         {
             if (!_targetForMovementPlayer) return;
 
-            var direction = _targetForMovementPlayer.transform.position - _enemySettings.RayOrigin.position;
+            var direction = _targetForMovementPlayer.transform.position - _shootingEnemySettings.RayOrigin.position;
             float distanceToTarget = direction.magnitude;
             direction.Normalize();
 
-            if (Physics.Raycast(_enemySettings.RayOrigin.position, direction, out var hit, distanceToTarget, ~_ignoreLayer))
+            if (Physics.Raycast(_shootingEnemySettings.RayOrigin.position, direction, out var hit, distanceToTarget,
+                    ~_ignoreLayer))
             {
                 if (hit.transform.gameObject.layer == Layers.Hero)
                 {
@@ -115,12 +119,12 @@ namespace Code.Enemy
 
         private void LookAtHero()
         {
-            _enemySettings.transform.LookAt(new Vector3(
+            _generalEnemySettings.transform.LookAt(new Vector3(
                 _targetForMovementPlayer.transform.position.x,
-                _enemySettings.transform.position.y,
+                _generalEnemySettings.transform.position.y,
                 _targetForMovementPlayer.transform.position.z));
         }
-        
+
         private void TakeDamage(int damage, Collider collider)
         {
             if (_collider != collider) return;
@@ -129,9 +133,9 @@ namespace Code.Enemy
 
             if (_currentHp <= 0)
             {
-                _enemySettings.gameObject.SetActive(false);
+                _generalEnemySettings.gameObject.SetActive(false);
                 _counterEnemies.DecreaseEnemies();
-                Died?.Invoke(_enemySettings.Value);
+                Died?.Invoke(_generalEnemySettings.Value);
             }
         }
 

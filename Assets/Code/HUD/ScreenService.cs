@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Code.HUD
 {
+    [DisallowMultipleComponent]
     public class ScreenService : MonoBehaviour
     {
         [SerializeField] private List<ScreenView> screens;

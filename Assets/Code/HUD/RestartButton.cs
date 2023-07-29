@@ -1,10 +1,10 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Code.HUD
 {
+    [DisallowMultipleComponent]
     public class RestartButton : MonoBehaviour
     {
         private Button restartButton;

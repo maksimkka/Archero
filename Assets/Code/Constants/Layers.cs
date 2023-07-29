@@ -1,4 +1,3 @@
-
 public static class Layers
 {
     public const int Default = 0;

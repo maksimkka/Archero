@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Code.DifferentMechanics;
 using Code.Enemy;
 using Code.Finish;
 using Code.Game.HealthBar;
@@ -11,11 +12,13 @@ using UnityEngine;
 
 namespace Code.Main
 {
+    [DisallowMultipleComponent]
     public class LevelEntryPoint : MonoBehaviour
     {
         [SerializeField] private float DelayBeforeStartGame;
         [SerializeField] private FloatingJoystick Joystick;
         [SerializeField] private FinishGate _finishGate;
+
         private ScoreView _scoreView;
         private HeroSettings _heroSettings;
         private HealthBarSettings[] _healthBarsSettings;
@@ -26,11 +29,12 @@ namespace Code.Main
         private HeroSpawner _heroSpawner;
         private StartGameDelay _startGameDelay;
         private DamageHandler _heroDamageHandler;
-        private HeroShooter _heroShooter;
+        private HeroWeapon _heroWeapon;
         private ScoreChanger _scoreChanger;
+        private HeroCollisionHandler _heroCollisionHandler;
         private HeroMove _heroMove;
-        
-        private List<EnemySettings> _enemySettings;
+
+        private List<GeneralEnemySettings> _enemySettings;
         private List<IEnemy> _enemies;
         private List<IHealthBar> _healthBars;
 
@@ -47,7 +51,8 @@ namespace Code.Main
 
         private void Update()
         {
-            if(!_startGameDelay.IsStartGame) return;
+            if (!_startGameDelay.IsStartGame) return;
+
             _heroMove.Run(_enemySettings);
 
             foreach (var enemy in _enemies)
@@ -88,39 +93,45 @@ namespace Code.Main
             _heroSpawner = new HeroSpawner();
             var hero = _heroSpawner.Spawn(_heroSpawnerSettings.HeroPrefab, _heroSpawnerSettings.transform.position);
             _heroSettings = hero.GetComponent<HeroSettings>();
-            _heroDamageHandler = new DamageHandler(_heroSettings.HP);
             var weaponSettings = _heroSettings.GetComponentInChildren<WeaponSettings>();
-            _heroMove = new HeroMove(Joystick, _heroSettings,
-                InitHeathBars(_heroSettings.HealthBarPosition, _heroSettings.HP), _heroDamageHandler);
-            _heroShooter = new HeroShooter(_heroMove, weaponSettings);
+            var healthBat = InitHeathBars(_heroSettings.HealthBarPosition, _heroSettings.HP);
+            _heroDamageHandler = new DamageHandler(_heroSettings.HP, healthBat);
+            _heroMove = new HeroMove(Joystick, _heroSettings);
+            _heroWeapon = new HeroWeapon(_heroMove, weaponSettings);
+            _heroCollisionHandler = new HeroCollisionHandler(_heroDamageHandler);
         }
 
         private void EnemiesInit()
         {
             _enemies = new List<IEnemy>();
-            _enemySettings = new List<EnemySettings>();
+            _enemySettings = new List<GeneralEnemySettings>();
             _counterEnemies = new CounterEnemies(_finishGate);
+
             for (int i = 0; i < _enemySpawnerSettings.CountFlyingEnemySpawn; i++)
             {
                 var enemy = _spawner.SpawnEnemy(_enemySpawnerSettings.FlyingEnemyPrefab);
-                var enemySettings = enemy.GetComponent<EnemySettings>();
+                var enemySettings = enemy.GetComponent<GeneralEnemySettings>();
+
+                var flyingEnemySettings = enemy.GetComponent<FlyingEnemySettings>();
                 _counterEnemies.IncreaseCountEnemies();
                 _enemySettings.Add(enemySettings);
-                _enemies.Add(new FlyingEnemy(enemySettings, _heroSettings,
-                        InitHeathBars(enemySettings.HealthBarPosition, enemySettings.HP), _counterEnemies));
+                var meleeAttack = new MeleeAttack(flyingEnemySettings, _heroSettings);
+                _enemies.Add(new FlyingEnemy(enemySettings, meleeAttack, _heroSettings,
+                    InitHeathBars(enemySettings.HealthBarPosition, enemySettings.HP), _counterEnemies));
             }
 
             for (int i = 0; i < _enemySpawnerSettings.CountShooterEnemySpawn; i++)
             {
                 var enemy = _spawner.SpawnEnemy(_enemySpawnerSettings.ShooterEnemyPrefab);
-                var enemySettings = enemy.GetComponent<EnemySettings>();
+                var enemySettings = enemy.GetComponent<GeneralEnemySettings>();
+                var shootingEnemySettings = enemy.GetComponent<ShootingEnemySettings>();
                 _enemySettings.Add(enemySettings);
+                _counterEnemies.IncreaseCountEnemies();
                 var weaponSettings = enemySettings.GetComponentInChildren<WeaponSettings>();
-                _enemies.Add(new ShooterEnemy(enemySettings, _heroSettings,weaponSettings,
-                    InitHeathBars(enemySettings.HealthBarPosition, enemySettings.HP), _counterEnemies));
+                _enemies.Add(new ShooterEnemy(enemySettings, _heroSettings, weaponSettings,
+                    InitHeathBars(enemySettings.HealthBarPosition, enemySettings.HP), _counterEnemies,
+                    shootingEnemySettings));
             }
-
-            
         }
 
         private void Subscribe()
@@ -130,7 +141,7 @@ namespace Code.Main
                 enemy.HitClose += _heroDamageHandler.TakeDamage;
             }
         }
-        
+
         private void Unsubscribe()
         {
             foreach (var enemy in _enemies)
@@ -151,8 +162,8 @@ namespace Code.Main
 
         private void OnDestroy()
         {
-            _heroShooter.Dispose();
-            _heroMove.Dispose();
+            _heroWeapon.Dispose();
+            _heroCollisionHandler.Dispose();
             _scoreChanger.Dispose();
             Unsubscribe();
             _startGameDelay.Dispose();

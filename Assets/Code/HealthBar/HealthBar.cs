@@ -7,9 +7,9 @@ namespace Code.Game.HealthBar
     {
         private readonly Transform _characterTransform;
         private readonly RectTransform hpBarRectTransform;
-
-        private HealthBarSettings _barSettings;
+        private readonly HealthBarSettings _barSettings;
         private readonly Slider _slider;
+        private readonly Camera _camera = Camera.main;
 
         public HealthBar(Transform characterTransform, HealthBarSettings barSettings, int maxHP)
         {
@@ -20,12 +20,13 @@ namespace Code.Game.HealthBar
             _slider.maxValue = maxHP;
             _slider.value = maxHP;
         }
+
         public void Follow()
         {
             if (_characterTransform != null)
             {
                 var targetPosition = _characterTransform.position;
-                Vector2 screenPoint = Camera.main.WorldToScreenPoint(targetPosition);
+                Vector2 screenPoint = _camera.WorldToScreenPoint(targetPosition);
                 hpBarRectTransform.position = screenPoint;
             }
         }

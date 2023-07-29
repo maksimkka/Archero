@@ -115,13 +115,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4721843777429362280}
+  - component: {fileID: 4721843777429362276}
+  - component: {fileID: 241528832402876499}
+  - component: {fileID: 4721843775874632803}
   - component: {fileID: 6548101783523741095}
   - component: {fileID: 2340261977594802733}
   - component: {fileID: 4721843777429362281}
   - component: {fileID: 4721843777429362278}
   - component: {fileID: 4721843777429362279}
-  - component: {fileID: 4721843777429362276}
-  - component: {fileID: 4721843775874632803}
   m_Layer: 6
   m_Name: FlyingEnemy
   m_TagString: Untagged
@@ -147,6 +148,51 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
+--- !u!114 &4721843777429362276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4721843777429362277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adbe0de8c0144f22ac09f292fc3a916f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <HP>k__BackingField: 30
+  <CollisionDamage>k__BackingField: 3
+  <Value>k__BackingField: 15
+  <Speed>k__BackingField: 1.3
+  <HealthBarPosition>k__BackingField: {fileID: 7993393553918520690}
+--- !u!114 &241528832402876499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4721843777429362277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0d2bd9c57084799b6674ad0f227514d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <MeleeDamage>k__BackingField: 3
+  <AttackDistance>k__BackingField: 1.3
+  <CooldownAttack>k__BackingField: 1.5
+--- !u!114 &4721843775874632803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4721843777429362277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20784b38e7c74050b830ddb607c7ee95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DelayBetweenCollisions: 0.5
 --- !u!33 &6548101783523741095
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -248,45 +294,6 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &4721843777429362276
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4721843777429362277}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adbe0de8c0144f22ac09f292fc3a916f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <Type>k__BackingField: 3
-  <IgnoreLayerMask>k__BackingField:
-    serializedVersion: 2
-    m_Bits: 0
-  <HP>k__BackingField: 30
-  <Damage>k__BackingField: 0
-  <CollisionDamage>k__BackingField: 3
-  <Value>k__BackingField: 15
-  <Speed>k__BackingField: 1
-  <ShootingSpeed>k__BackingField: 1
-  <AttackDistance>k__BackingField: 1
-  <TimeStillnessAndMovement>k__BackingField: 0
-  <RayOrigin>k__BackingField: {fileID: 7207141122515438943}
-  <HealthBarPosition>k__BackingField: {fileID: 7993393553918520690}
---- !u!114 &4721843775874632803
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4721843777429362277}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20784b38e7c74050b830ddb607c7ee95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DelayBetweenCollisions: 0.5
 --- !u!1 &5051781150526189924
 GameObject:
   m_ObjectHideFlags: 0

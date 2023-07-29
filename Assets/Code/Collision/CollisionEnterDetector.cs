@@ -1,12 +1,12 @@
-﻿using System;
-using Code.Logger;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Code.Enemy
+namespace Code.Collision
 {
+    [DisallowMultipleComponent]
     public class CollisionEnterDetector : MonoBehaviour
     {
         [SerializeField] public float DelayBetweenCollisions;
+
         private Collider selfCollider;
         private float lastCollisionTime;
 
@@ -15,7 +15,7 @@ namespace Code.Enemy
             selfCollider = gameObject.GetComponent<Collider>();
         }
 
-        private void OnCollisionStay(Collision collisionInfo)
+        private void OnCollisionStay(UnityEngine.Collision collisionInfo)
         {
             if (Time.time - lastCollisionTime >= DelayBetweenCollisions)
             {

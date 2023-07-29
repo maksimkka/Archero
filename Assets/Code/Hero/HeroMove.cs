@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Code.Bullet;
+using Code.DifferentMechanics;
 using Code.Enemy;
-using Code.Game.HealthBar;
-using Code.HUD;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,77 +10,27 @@ namespace Code.Hero
     public class HeroMove : IDisposable
     {
         public event Action HeroStopped;
-
         private readonly FloatingJoystick _joystick;
-        private readonly HeroSettings _heroSettings;
         private readonly NavMeshAgent _agent;
-        private readonly HealthBar _healthBar;
-        private readonly DamageHandler _damageHandler;
+        private readonly HeroSettings _heroSettings;
         private GameObject _targetRotation;
-
         
-        public HeroMove(FloatingJoystick joystick, HeroSettings heroSettings, HealthBar HealthBar, DamageHandler damageHandler)
+        public HeroMove(FloatingJoystick joystick, HeroSettings heroSettings)
         {
-            _healthBar = HealthBar;
             _joystick = joystick;
             _heroSettings = heroSettings;
             _agent = heroSettings.GetComponent<NavMeshAgent>();
-            _damageHandler = damageHandler;
-
-            Subscribe();
+            HeroStopped += LookAtEnemy;
         }
 
-        public void Run(List<EnemySettings> enemies)
+        public void Run(List<GeneralEnemySettings> enemies)
         {
-            if(!_agent.gameObject.activeSelf) return;
+            if (!_agent.gameObject.activeSelf) return;
             Move();
             Rotate();
             CheckDistance(enemies);
         }
-
-        private void Subscribe()
-        {
-            HeroStopped += LookAtEnemy;
-            _damageHandler.Dead += Dead;
-            CollisionDetector.CollisionDetected += CollisionEnterHandler;
-            CollisionDetector.TriggerDetected += TriggerEnterHandler;
-            
-        }
-
-        private void Unsubscribe()
-        {
-            HeroStopped -= LookAtEnemy;
-            _damageHandler.Dead -= Dead;
-            CollisionDetector.CollisionDetected -= CollisionEnterHandler;
-            CollisionDetector.TriggerDetected -= TriggerEnterHandler;
-        }
-
-        private void CollisionEnterHandler(Collider selfCollider, Collider otherCollider)
-        {
-            if (otherCollider.gameObject.layer == Layers.Hero && selfCollider.gameObject.layer == Layers.Enemy)
-            {
-                var enemySettings = selfCollider.gameObject.GetComponent<EnemySettings>();
-                _damageHandler.TakeDamage(enemySettings.CollisionDamage);
-                _healthBar.ChangeValue(enemySettings.CollisionDamage);
-            }
-        }
-
-        private void TriggerEnterHandler(Collider selfCollider, Collider otherCollider)
-        {
-            if (otherCollider.gameObject.layer == Layers.Hero && selfCollider.gameObject.layer == Layers.EnemyBullet)
-            {
-                var enemySettings = selfCollider.gameObject.GetComponent<BulletSettings>();
-                _damageHandler.TakeDamage(enemySettings.Damage);
-                _healthBar.ChangeValue(enemySettings.Damage);
-            }
-        }
-
-        private void Dead()
-        {
-            ScreenSwitcher.ShowScreen(ScreenType.Defeat);
-            Time.timeScale = 0;
-        }
-
+        
         private void Move()
         {
             _agent.velocity = new Vector3(_joystick.Horizontal * _heroSettings.Speed,
@@ -98,14 +46,15 @@ namespace Code.Hero
         {
             if (_joystick.Horizontal != 0 || _joystick.Vertical != 0)
             {
+                var velocity = _agent.velocity;
                 _heroSettings.gameObject.transform.rotation = Quaternion.LookRotation(new Vector3(
-                    _agent.velocity.x,
+                    velocity.x,
                     0,
-                    _agent.velocity.z));
+                    velocity.z));
             }
         }
-
-        private void CheckDistance(List<EnemySettings> enemies)
+        
+        private void CheckDistance(List<GeneralEnemySettings> enemies)
         {
             _targetRotation = null;
             float closestDistance = Mathf.Infinity;
@@ -123,17 +72,19 @@ namespace Code.Hero
                 }
             }
         }
+
         private void LookAtEnemy()
         {
+            var position = _targetRotation.transform.position;
             _heroSettings.transform.LookAt(new Vector3(
-                _targetRotation.transform.position.x,
+                position.x,
                 _heroSettings.transform.position.y,
-                _targetRotation.transform.position.z));
+                position.z));
         }
 
         public void Dispose()
         {
-            Unsubscribe();
+            HeroStopped -= LookAtEnemy;
         }
     }
 }

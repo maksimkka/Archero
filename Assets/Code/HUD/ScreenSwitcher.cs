@@ -11,6 +11,7 @@ namespace Code.HUD
             screens = screenList;
             HideAllScreens();
         }
+
         public static void ShowScreen(ScreenType screenType)
         {
             for (int i = 0; i < screens.Count; i++)

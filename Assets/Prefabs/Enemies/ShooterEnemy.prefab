@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8543271985810966463}
   m_Layer: 6
-  m_Name: RayCastPoint
+  m_Name: RayOrigin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2236475642044287113}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.534, z: 0.357}
+  m_LocalPosition: {x: 0, y: 0.92, z: 0.357}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5984298556716702856}
@@ -104,8 +104,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Bullet>k__BackingField: {fileID: 875825670398161837, guid: 06b95d90a00d67147a61b3a057623f8d, type: 3}
-  <ShootForce>k__BackingField: 3
-  <ShootReload>k__BackingField: 1
+  <ShootForce>k__BackingField: 2
+  <ShootReload>k__BackingField: 1.5
 --- !u!1 &5984298556716702853
 GameObject:
   m_ObjectHideFlags: 0
@@ -115,12 +115,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5984298556716702856}
+  - component: {fileID: 5984298556716702852}
+  - component: {fileID: -7389010907153648278}
   - component: {fileID: 4324243029625166836}
   - component: {fileID: 7748682982430350252}
   - component: {fileID: 5984298556716702857}
   - component: {fileID: 5984298556716702854}
   - component: {fileID: 5984298556716702855}
-  - component: {fileID: 5984298556716702852}
   - component: {fileID: 4051818956400194844}
   m_Layer: 6
   m_Name: ShooterEnemy
@@ -147,6 +148,40 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
+--- !u!114 &5984298556716702852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5984298556716702853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adbe0de8c0144f22ac09f292fc3a916f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <HP>k__BackingField: 30
+  <CollisionDamage>k__BackingField: 3
+  <Value>k__BackingField: 20
+  <Speed>k__BackingField: 1
+  <HealthBarPosition>k__BackingField: {fileID: 1774145979200318718}
+--- !u!114 &-7389010907153648278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5984298556716702853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd359d20380c4aac9c7e413db8fad3b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <IgnoreLayerMask>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 1905
+  <TimeStillness>k__BackingField: 5
+  <RayOrigin>k__BackingField: {fileID: 8543271985810966463}
 --- !u!33 &4324243029625166836
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -248,32 +283,6 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 7
   m_ObstacleAvoidanceType: 4
---- !u!114 &5984298556716702852
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5984298556716702853}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adbe0de8c0144f22ac09f292fc3a916f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <Type>k__BackingField: 2
-  <IgnoreLayerMask>k__BackingField:
-    serializedVersion: 2
-    m_Bits: 881
-  <HP>k__BackingField: 30
-  <Damage>k__BackingField: 10
-  <CollisionDamage>k__BackingField: 5
-  <Value>k__BackingField: 20
-  <Speed>k__BackingField: 1
-  <ShootingSpeed>k__BackingField: 0
-  <AttackDistance>k__BackingField: 0
-  <TimeStillnessAndMovement>k__BackingField: 5
-  <RayOrigin>k__BackingField: {fileID: 8543271985810966463}
-  <HealthBarPosition>k__BackingField: {fileID: 1774145979200318718}
 --- !u!114 &4051818956400194844
 MonoBehaviour:
   m_ObjectHideFlags: 0

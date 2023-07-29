@@ -1,5 +1,4 @@
-﻿using System;
-using Code.HUD;
+﻿using Code.HUD;
 using UnityEngine;
 
 namespace Code.Finish

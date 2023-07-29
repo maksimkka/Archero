@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 
-namespace Code.Hero
+namespace Code.DifferentMechanics
 {
+    [DisallowMultipleComponent]
     public class HeroSettings : MonoBehaviour
     {
         [field: SerializeField] public int HP { get; private set; }

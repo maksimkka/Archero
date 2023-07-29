@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 namespace Code.HUD
 {
+    [DisallowMultipleComponent]
     public class PauseButton : MonoBehaviour
     {
         [SerializeField] public Button OpenMenuButton;
@@ -23,7 +24,7 @@ namespace Code.HUD
                 Time.timeScale = 0;
                 ScreenSwitcher.ShowScreen(ScreenType.Pause);
             }
-            
+
             else
             {
                 Time.timeScale = 1;

@@ -1,5 +1,4 @@
-﻿using System;
-using Code.Finish;
+﻿using Code.Finish;
 
 namespace Code.Enemy
 {
@@ -7,6 +6,7 @@ namespace Code.Enemy
     {
         private readonly FinishGate _finishGate;
         private int _currentCountEnemies;
+
         public CounterEnemies(FinishGate finishGate)
         {
             _finishGate = finishGate;

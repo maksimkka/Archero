@@ -8,11 +8,12 @@ namespace Code.Main
     {
         private readonly CancellationTokenSource tokenSource = new CancellationTokenSource();
         public bool IsStartGame { get; private set; }
+
         public StartGameDelay(float delayBeforeStart)
         {
             DelayBeforeStartGame(delayBeforeStart);
         }
-        
+
         private async void DelayBeforeStartGame(float delayBeforeStart)
         {
             IsStartGame = false;

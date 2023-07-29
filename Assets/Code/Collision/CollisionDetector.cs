@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using Code.Bullet;
 using UnityEngine;
 
-namespace Code.Enemy
+namespace Code.Collision
 {
     public static class CollisionDetector
     {

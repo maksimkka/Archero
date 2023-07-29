@@ -9,6 +9,7 @@ namespace Code.Score
         private readonly ScoreView _scoreView;
         private int _currentScore;
         private readonly List<IEnemy> _enemies;
+
         public ScoreChanger(ScoreView scoreView, List<IEnemy> enemies)
         {
             _scoreView = scoreView;
